@@ -16,7 +16,7 @@ class Base {
 	protected $items; //trace集合
 	protected $total; //trace统计
 	/**
-	 * 构造函数
+	 * 构造
 	 */
 	public function __construct() {
 		$this->openTrace = Config::get('app.debug') && Config::get('app.trace');	
