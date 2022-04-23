@@ -10,7 +10,7 @@
 namespace willphp\debug;
 use willphp\framework\build\Provider;
 class DebugProvider extends Provider {
-	public $defer = false;	
+	public $defer = false; //延迟加载
 	public function boot() {		
 
 	}
