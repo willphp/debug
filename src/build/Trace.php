@@ -61,7 +61,7 @@ trait Trace {
 		$request = is_callable($get_request)? call_user_func($get_request) : [];
 		$key = strtoupper($type);
 		if (isset($request[$key])) {
-			$this->items[$type] = $request[$key];
+			$this->items[$type] = $this->filter($request[$key], []);
 		}
 		return empty($this->items[$type])? false : true;
 	}
