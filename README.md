@@ -1,49 +1,47 @@
 # 调试组件
-Debug组件(DebugBar)用于展示trace页面，这是一个调试/分析工具条
+
+Debug组件(DebugBar)用于展示trace页面，这是一个调试和分析工具条
 
 #开始使用
 
 ####安装组件
 
-使用 composer 命令进行安装或下载源代码使用(依赖willphp/config组件)。
+使用 composer 命令进行安装或下载源代码使用，依赖(willphp/config)。
 
     composer require willphp/debug
 
-> WillPHP 框架已经内置此组件，无需再安装。
+> WillPHP框架已经内置此组件，无需再安装。
 
 ####使用示例
 
     \willphp\debug\Debug::trace('error info', 'error'); //设置错误信息
 
+####调试设置
 
-####开启Trace
-
-`config/app.php`配置文件可开启trace显示DebugBar：
+必须常量：
 	
-	'debug' => true, //开启debug后trace才生效
-	'trace' => true, //开启显示trace页面
+	define('APP_TRACE', true); //是否开启调试栏
+	define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+	define('RUN_MEMORY', memory_get_usage()); //开始内存
+	define('RUN_TIME', microtime(true)); //开始时间
 
 `config/debug.php`配置文件可设置相关显示信息：
 
-	//设置显示trace的级别
-	'trace_level' => [
-			'base'  => '基本',				
-			//'file'  => '文件', //不显示文件加载栏目
-			'sql'   => 'SQL',
+	//设置显示的trace
+	'level' => [
+			'base' => '基本',
+			'file' => '文件', //文件加载
+			'sql' => 'SQL',
 			'debug' => '调试',
-			'post'  => 'POST',
-			'get'   => 'GET',
-			//'cookie'=> 'COOKIE',
-			//'session'=> 'SESSION',
+			'post' => 'POST',
+			'get' => 'GET',
+			'cookie' => 'COOKIE',
+			'session' => 'SESSION',
 			'error' => '错误',
 	],
-	//设置获取错误的方法
-	'get_error' => '\willphp\error\Error::all', 
-	//设置获取路由信息的方法
-	'get_route' => '\willphp\route\Route::getRoute', 
-	//设置获取请求变量的方法
-	'get_request' => '\willphp\request\Request::all', 
-	'request_type' => ['get', 'post', 'cookie', 'session'], //请求变量类型
+	//获取路由信息(可选)
+	'get_route' => '', 
+
 	
 ####设置trace
 
@@ -51,7 +49,7 @@ Debug组件(DebugBar)用于展示trace页面，这是一个调试/分析工具�
 	
 	Debug::trace('SELECT * FROM `test`', 'sql'); //记录sql到trace
 	Debug::trace('错误信息', 'error'); //记录error到trace
-	Debug::trace(['id'=>1]); //在调试打印数组
+	Debug::trace(['id'=>1]); //在调试栏目中显示数组
 
 ####显示trace
 
@@ -59,8 +57,23 @@ Debug组件(DebugBar)用于展示trace页面，这是一个调试/分析工具�
 
     $trace = Debug::getTrace(); //获取trace
     echo $trace;  
+    
+添加trace信息到内容后面：
+
+    $content = Debug::appendTrace($content); 
+    echo $content;      
 
 ####助手函数
 
-	trace('info', 'error'); //设置trace,第二个参数默认debug 
+已去除内置，请自行设置此函数。
 
+	/**
+	 * 记录trace信息
+	 * @param  string|array  $info  变量
+	 * @param  string  $level  Trace级别(debug,sql,error)
+	 * @return void|array
+	 */
+	function trace($info = '', $level = 'debug') {
+		return \willphp\debug\Debug::trace($info, $level);
+	}
+	
